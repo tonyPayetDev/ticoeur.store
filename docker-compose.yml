@@ -1,0 +1,21 @@
+version: '3.9'
+
+services:
+  ticoeur-website:
+    image: nginx:alpine
+    container_name: ticoeur-website
+    volumes:
+      - ./www:/usr/share/nginx/html:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ticoeur.rule=Host(`ticoeur.store`)"
+      - "traefik.http.routers.ticoeur.entrypoints=http"
+      - "traefik.http.services.ticoeur.loadbalancer.server.port=80"
+    networks:
+      - coolify
+
+networks:
+  coolify:
+    external: true
